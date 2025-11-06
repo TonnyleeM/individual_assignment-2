@@ -1,16 +1,26 @@
-# bookswap
+# BookSwap
 
-A new Flutter project.
+BookSwap is a student-to-student textbook exchange app built with Flutter and Firebase.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1) Install Flutter and set up an emulator or physical device.
 
-A few resources to get you started if this is your first Flutter project:
+2) Fetch dependencies:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+flutter pub get
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3) Firebase setup (development):
+- Create a project in the Firebase Console named "BookSwap".
+- Add iOS and Android apps, then download and place the platform config files in the native folders.
+- Enable Authentication (Email/Password), Firestore, and Storage.
+
+4) Run the app:
+
+```
+flutter run
+```
+
+This repository follows a layered structure (`models`, `services`, `providers`, `screens`, `widgets`, `utils`).
