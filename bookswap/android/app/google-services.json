@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "872832157007",
+    "project_id": "bookswap-d71af",
+    "storage_bucket": "bookswap-d71af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872832157007:android:60501ae96033ba6335b13a",
+        "android_client_info": {
+          "package_name": "com.example.bookswap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB08zuwDzlqXuxPF0yagWeVpYGM4iKq-Wk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

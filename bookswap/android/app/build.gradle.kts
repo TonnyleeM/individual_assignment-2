@@ -3,12 +3,14 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Apply Google services plugin for Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.example.bookswap"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Use the default NDK from the Android SDK if needed
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,7 +26,8 @@ android {
         applicationId = "com.example.bookswap"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Ensure minSdk is at least 21 for Firebase
+        minSdk = 21
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
