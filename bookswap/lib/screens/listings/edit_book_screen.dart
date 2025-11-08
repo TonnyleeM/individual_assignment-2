@@ -20,6 +20,7 @@ class EditBookScreen extends StatefulWidget {
 class _EditBookScreenState extends State<EditBookScreen> {
   late final TextEditingController _titleController;
   late final TextEditingController _authorController;
+  late final TextEditingController _swapForController;
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
   late String _selectedCondition;
@@ -32,6 +33,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     super.initState();
     _titleController = TextEditingController(text: widget.book.title);
     _authorController = TextEditingController(text: widget.book.author);
+    _swapForController = TextEditingController(text: widget.book.swapFor ?? '');
     _selectedCondition = widget.book.condition;
   }
 
@@ -39,6 +41,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void dispose() {
     _titleController.dispose();
     _authorController.dispose();
+    _swapForController.dispose();
     super.dispose();
   }
 
@@ -59,9 +62,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
@@ -72,6 +75,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
       bookId: widget.book.id,
       title: _titleController.text.trim(),
       author: _authorController.text.trim(),
+      swapFor: _swapForController.text.trim(),
       condition: _selectedCondition,
       imageFile: _imageChanged ? _selectedImage : null,
       existingImageUrl: widget.book.coverImageUrl,
@@ -89,7 +93,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(booksProvider.errorMessage ?? 'Failed to update book'),
+            content: Text(
+              booksProvider.errorMessage ?? 'Failed to update book',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -131,39 +137,37 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   child: _imageChanged && _selectedImage != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
+                          child: Image.file(_selectedImage!, fit: BoxFit.cover),
                         )
                       : widget.book.coverImageUrl != null &&
-                              widget.book.coverImageUrl!.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: widget.book.coverImageUrl!,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                                errorWidget: (context, url, error) => const Icon(
-                                  Icons.error,
-                                  size: 50,
-                                ),
-                              ),
-                            )
-                          : const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.add_photo_alternate,
-                                    size: 50, color: Colors.white70),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Tap to change cover',
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              ],
+                            widget.book.coverImageUrl!.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.book.coverImageUrl!,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(),
                             ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error, size: 50),
+                          ),
+                        )
+                      : const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_photo_alternate,
+                              size: 50,
+                              color: Colors.white70,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Tap to change cover',
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ],
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -182,11 +186,16 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
@@ -195,11 +204,16 @@ class _EditBookScreenState extends State<EditBookScreen> {
               const SizedBox(height: 20),
               // Author field
               TextFormField(
-                controller: _authorController,
+                controller: _swapForController,
                 decoration: InputDecoration(
-                  labelText: 'Author',
+                  labelText: 'Swap For',
                   labelStyle: const TextStyle(color: Colors.white70),
-                  prefixIcon: const Icon(Icons.person, color: AppColors.accent),
+                  hintText: 'What book do you want in exchange?',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  prefixIcon: const Icon(
+                    Icons.swap_horiz,
+                    color: AppColors.accent,
+                  ),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
                   border: OutlineInputBorder(
@@ -208,15 +222,20 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
-                validator: (value) => notEmpty(value, fieldName: 'Author'),
+                maxLines: 2,
               ),
               const SizedBox(height: 20),
               // Condition selector
@@ -242,7 +261,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     selectedColor: AppColors.accent,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.black : Colors.white,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -273,7 +294,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black,
+                                ),
                               ),
                             )
                           : const Text(
@@ -295,4 +318,3 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 }
-

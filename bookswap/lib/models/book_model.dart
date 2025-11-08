@@ -4,6 +4,7 @@ class BookModel {
   final String id;
   final String title;
   final String author;
+  final String? swapFor; // ← NEW FIELD ADDED
   final String condition; // New, Like New, Good, Used
   final String? coverImageUrl;
   final String ownerId;
@@ -15,6 +16,7 @@ class BookModel {
     required this.id,
     required this.title,
     required this.author,
+    this.swapFor, // ← NEW FIELD ADDED
     required this.condition,
     required this.coverImageUrl,
     required this.ownerId,
@@ -30,6 +32,7 @@ class BookModel {
       id: doc.id,
       title: data['title'] ?? '',
       author: data['author'] ?? '',
+      swapFor: data['swapFor'], // ← NEW FIELD ADDED
       condition: data['condition'] ?? 'Used',
       coverImageUrl: data['coverImageUrl'],
       ownerId: data['ownerId'] ?? '',
@@ -44,6 +47,8 @@ class BookModel {
     final map = {
       'title': title,
       'author': author,
+      if (swapFor != null && swapFor!.isNotEmpty)
+        'swapFor': swapFor, // ← NEW FIELD ADDED
       'condition': condition,
       'coverImageUrl': coverImageUrl,
       'ownerId': ownerId,
@@ -62,6 +67,7 @@ class BookModel {
     String? id,
     String? title,
     String? author,
+    String? swapFor, // ← NEW FIELD ADDED
     String? condition,
     String? coverImageUrl,
     String? ownerId,
@@ -73,6 +79,7 @@ class BookModel {
       id: id ?? this.id,
       title: title ?? this.title,
       author: author ?? this.author,
+      swapFor: swapFor ?? this.swapFor, // ← NEW FIELD ADDED
       condition: condition ?? this.condition,
       coverImageUrl: coverImageUrl ?? this.coverImageUrl,
       ownerId: ownerId ?? this.ownerId,

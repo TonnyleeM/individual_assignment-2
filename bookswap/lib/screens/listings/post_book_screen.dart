@@ -17,6 +17,7 @@ class _PostBookScreenState extends State<PostBookScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _authorController = TextEditingController();
+  final _swapForController = TextEditingController(); // ← ADD THIS LINE
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedImage;
   String _selectedCondition = 'Used';
@@ -27,6 +28,7 @@ class _PostBookScreenState extends State<PostBookScreen> {
   void dispose() {
     _titleController.dispose();
     _authorController.dispose();
+    _swapForController.dispose(); // ← ADD THIS LINE
     super.dispose();
   }
 
@@ -46,9 +48,9 @@ class _PostBookScreenState extends State<PostBookScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
@@ -59,6 +61,7 @@ class _PostBookScreenState extends State<PostBookScreen> {
       final success = await booksProvider.createBook(
         title: _titleController.text.trim(),
         author: _authorController.text.trim(),
+        swapFor: _swapForController.text.trim(),
         condition: _selectedCondition,
         imageFile: _selectedImage,
       );
@@ -75,7 +78,9 @@ class _PostBookScreenState extends State<PostBookScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(booksProvider.errorMessage ?? 'Failed to post book'),
+              content: Text(
+                booksProvider.errorMessage ?? 'Failed to post book',
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -117,15 +122,16 @@ class _PostBookScreenState extends State<PostBookScreen> {
                   child: _selectedImage != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
+                          child: Image.file(_selectedImage!, fit: BoxFit.cover),
                         )
                       : const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.add_photo_alternate, size: 50, color: Colors.white70),
+                            Icon(
+                              Icons.add_photo_alternate,
+                              size: 50,
+                              color: Colors.white70,
+                            ),
                             SizedBox(height: 8),
                             Text(
                               'Tap to add book cover',
@@ -151,11 +157,16 @@ class _PostBookScreenState extends State<PostBookScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
@@ -164,11 +175,16 @@ class _PostBookScreenState extends State<PostBookScreen> {
               const SizedBox(height: 20),
               // Author field
               TextFormField(
-                controller: _authorController,
+                controller: _swapForController,
                 decoration: InputDecoration(
-                  labelText: 'Author',
+                  labelText: 'Swap For',
                   labelStyle: const TextStyle(color: Colors.white70),
-                  prefixIcon: const Icon(Icons.person, color: AppColors.accent),
+                  hintText: 'What book do you want in exchange?',
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  prefixIcon: const Icon(
+                    Icons.swap_horiz,
+                    color: AppColors.accent,
+                  ),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
                   border: OutlineInputBorder(
@@ -177,15 +193,20 @@ class _PostBookScreenState extends State<PostBookScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.accent, width: 2),
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
-                validator: (value) => notEmpty(value, fieldName: 'Author'),
+                maxLines: 2,
               ),
               const SizedBox(height: 20),
               // Condition selector
@@ -211,7 +232,9 @@ class _PostBookScreenState extends State<PostBookScreen> {
                     selectedColor: AppColors.accent,
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.black : Colors.white,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -236,7 +259,9 @@ class _PostBookScreenState extends State<PostBookScreen> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.black,
+                                ),
                               ),
                             )
                           : const Text(
@@ -258,4 +283,3 @@ class _PostBookScreenState extends State<PostBookScreen> {
     );
   }
 }
-

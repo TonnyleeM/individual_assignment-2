@@ -48,6 +48,7 @@ class BooksProvider extends ChangeNotifier {
   Future<bool> createBook({
     required String title,
     required String author,
+    String? swapFor, // ← ADD THIS LINE
     required String condition,
     File? imageFile,
   }) async {

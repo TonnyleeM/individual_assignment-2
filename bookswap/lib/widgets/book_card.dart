@@ -8,11 +8,7 @@ class BookCard extends StatelessWidget {
   final BookModel book;
   final VoidCallback? onTap;
 
-  const BookCard({
-    super.key,
-    required this.book,
-    this.onTap,
-  });
+  const BookCard({super.key, required this.book, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +24,8 @@ class BookCard extends StatelessWidget {
               // Book cover image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: book.coverImageUrl != null && book.coverImageUrl!.isNotEmpty
+                child:
+                    book.coverImageUrl != null && book.coverImageUrl!.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: book.coverImageUrl!,
                         width: 80,
@@ -51,7 +48,11 @@ class BookCard extends StatelessWidget {
                         width: 80,
                         height: 100,
                         color: Colors.grey[300],
-                        child: const Icon(Icons.book, size: 40, color: Colors.grey),
+                        child: const Icon(
+                          Icons.book,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
                       ),
               ),
               const SizedBox(width: 12),
@@ -80,7 +81,10 @@ class BookCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.accent.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
@@ -94,10 +98,39 @@ class BookCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
+                    if (book.swapFor != null && book.swapFor!.isNotEmpty) ...[
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.swap_horiz,
+                            size: 14,
+                            color: Colors.white60,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              'Swap for: ${book.swapFor}',
+                              style: const TextStyle(
+                                color: Colors.white60,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                    ],
                     Row(
                       children: [
-                        const Icon(Icons.access_time, size: 12, color: Colors.white60),
+                        const Icon(
+                          Icons.access_time,
+                          size: 12,
+                          color: Colors.white60,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           _formatTimeAgo(book.createdAt),
@@ -133,4 +166,3 @@ class BookCard extends StatelessWidget {
     }
   }
 }
-
