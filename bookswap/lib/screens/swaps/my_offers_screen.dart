@@ -7,6 +7,7 @@ import '../../utils/constants.dart';
 import '../../models/swap_model.dart';
 import '../chats/chat_screen.dart';
 import '../../models/chat_model.dart';
+import '../../models/message_model.dart';
 
 class MyOffersScreen extends StatelessWidget {
   const MyOffersScreen({super.key});
@@ -36,7 +37,9 @@ class MyOffersScreen extends StatelessWidget {
         ),
         body: Consumer<SwapsProvider>(
           builder: (context, swapsProvider, _) {
-            if (swapsProvider.isLoading && swapsProvider.myOffers.isEmpty && swapsProvider.receivedOffers.isEmpty) {
+            if (swapsProvider.isLoading &&
+                swapsProvider.myOffers.isEmpty &&
+                swapsProvider.receivedOffers.isEmpty) {
               return const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
@@ -87,10 +90,7 @@ class MyOffersScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               isSent ? 'No swap offers sent' : 'No swap offers received',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 18),
             ),
           ],
         ),
@@ -109,7 +109,7 @@ class MyOffersScreen extends StatelessWidget {
 
   Widget _buildOfferCard(BuildContext context, SwapModel swap, bool isSent) {
     final swapsProvider = Provider.of<SwapsProvider>(context, listen: false);
-    
+
     Color statusColor;
     IconData statusIcon;
     switch (swap.status) {
@@ -166,7 +166,10 @@ class MyOffersScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -199,36 +202,54 @@ class MyOffersScreen extends StatelessWidget {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () async {
-                      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-                      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                      final chatProvider = Provider.of<ChatProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final authProvider = Provider.of<AuthProvider>(
+                        context,
+                        listen: false,
+                      );
                       final currentUserId = authProvider.user?.id ?? '';
-                      
-                      final otherUserId = isSent ? swap.receiverId : swap.senderId;
-                      final otherUserName = isSent ? swap.receiverName : swap.senderName;
-                      
+
+                      final otherUserId = isSent
+                          ? swap.receiverId
+                          : swap.senderId;
+                      final otherUserName = isSent
+                          ? swap.receiverName
+                          : swap.senderName;
+
                       try {
                         final chatId = await chatProvider.getOrCreateChat(
                           otherUserId,
                           otherUserName,
                           bookId: swap.bookId,
                         );
-                        
+
                         // Get the chat model
                         final chat = ChatModel(
                           id: chatId,
-                          user1Id: currentUserId < otherUserId ? currentUserId : otherUserId,
-                          user1Name: currentUserId < otherUserId 
-                              ? (authProvider.user?.displayName ?? authProvider.user?.email ?? 'Unknown')
+                          user1Id: currentUserId.compareTo(otherUserId) < 0
+                              ? currentUserId
+                              : otherUserId,
+                          user1Name: currentUserId.compareTo(otherUserId) < 0
+                              ? (authProvider.user?.displayName ??
+                                    authProvider.user?.email ??
+                                    'Unknown')
                               : otherUserName,
-                          user2Id: currentUserId < otherUserId ? otherUserId : currentUserId,
-                          user2Name: currentUserId < otherUserId 
+                          user2Id: currentUserId.compareTo(otherUserId) < 0
+                              ? otherUserId
+                              : currentUserId,
+                          user2Name: currentUserId.compareTo(otherUserId) < 0
                               ? otherUserName
-                              : (authProvider.user?.displayName ?? authProvider.user?.email ?? 'Unknown'),
+                              : (authProvider.user?.displayName ??
+                                    authProvider.user?.email ??
+                                    'Unknown'),
                           lastMessage: '',
                           lastMessageTime: DateTime.now(),
                           bookId: swap.bookId,
                         );
-                        
+
                         if (context.mounted) {
                           Navigator.push(
                             context,
@@ -251,7 +272,10 @@ class MyOffersScreen extends StatelessWidget {
                         }
                       }
                     },
-                    icon: const Icon(Icons.chat_bubble_outline, color: AppColors.accent),
+                    icon: const Icon(
+                      Icons.chat_bubble_outline,
+                      color: AppColors.accent,
+                    ),
                     label: const Text(
                       'Chat',
                       style: TextStyle(color: AppColors.accent),
@@ -272,7 +296,9 @@ class MyOffersScreen extends StatelessWidget {
                         context: context,
                         builder: (context) => AlertDialog(
                           title: const Text('Cancel Swap'),
-                          content: const Text('Are you sure you want to cancel this swap offer?'),
+                          content: const Text(
+                            'Are you sure you want to cancel this swap offer?',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context, false),
@@ -301,7 +327,10 @@ class MyOffersScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
-                    child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               else
@@ -310,16 +339,21 @@ class MyOffersScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final success = await swapsProvider.acceptSwap(swap.id);
+                          final success = await swapsProvider.acceptSwap(
+                            swap.id,
+                          );
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   success
                                       ? 'Swap accepted!'
-                                      : swapsProvider.errorMessage ?? 'Failed to accept swap',
+                                      : swapsProvider.errorMessage ??
+                                            'Failed to accept swap',
                                 ),
-                                backgroundColor: success ? Colors.green : Colors.red,
+                                backgroundColor: success
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
                             );
                           }
@@ -327,23 +361,31 @@ class MyOffersScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                         ),
-                        child: const Text('Accept', style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          'Accept',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final success = await swapsProvider.rejectSwap(swap.id);
+                          final success = await swapsProvider.rejectSwap(
+                            swap.id,
+                          );
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   success
                                       ? 'Swap rejected'
-                                      : swapsProvider.errorMessage ?? 'Failed to reject swap',
+                                      : swapsProvider.errorMessage ??
+                                            'Failed to reject swap',
                                 ),
-                                backgroundColor: success ? Colors.orange : Colors.red,
+                                backgroundColor: success
+                                    ? Colors.orange
+                                    : Colors.red,
                               ),
                             );
                           }
@@ -351,7 +393,10 @@ class MyOffersScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                         ),
-                        child: const Text('Reject', style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],
@@ -363,4 +408,3 @@ class MyOffersScreen extends StatelessWidget {
     );
   }
 }
-

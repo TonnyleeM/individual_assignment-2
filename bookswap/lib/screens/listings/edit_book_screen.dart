@@ -75,7 +75,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
       bookId: widget.book.id,
       title: _titleController.text.trim(),
       author: _authorController.text.trim(),
-      swapFor: _swapForController.text.trim(),
       condition: _selectedCondition,
       imageFile: _imageChanged ? _selectedImage : null,
       existingImageUrl: widget.book.coverImageUrl,
@@ -173,11 +172,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
               const SizedBox(height: 20),
               // Title field
               TextFormField(
-                controller: _titleController,
+                controller: _authorController,
                 decoration: InputDecoration(
-                  labelText: 'Book Title',
+                  labelText: 'Author',
                   labelStyle: const TextStyle(color: Colors.white70),
-                  prefixIcon: const Icon(Icons.book, color: AppColors.accent),
+                  prefixIcon: const Icon(Icons.person, color: AppColors.accent),
                   filled: true,
                   fillColor: Colors.white.withOpacity(0.1),
                   border: OutlineInputBorder(
@@ -199,10 +198,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
                 ),
                 style: const TextStyle(color: Colors.white),
-                validator: (value) => notEmpty(value, fieldName: 'Book Title'),
+                validator: (value) => notEmpty(value, fieldName: 'Author'),
               ),
               const SizedBox(height: 20),
-              // Author field
+              // Swap For field
               TextFormField(
                 controller: _swapForController,
                 decoration: InputDecoration(

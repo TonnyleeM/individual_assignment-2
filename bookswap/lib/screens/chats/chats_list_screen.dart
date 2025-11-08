@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../providers/chat_provider.dart';
-import '../../providers/auth_provider.dart';
+import '../../providers/auth_provider.dart' as app_auth;
 import '../../utils/constants.dart';
 import '../../models/chat_model.dart';
 import 'chat_screen.dart';
@@ -45,18 +45,12 @@ class ChatsListScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         const Text(
                           'No chats yet',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 18),
                         ),
                         const SizedBox(height: 8),
                         const Text(
                           'Start a conversation from a swap offer!',
-                          style: TextStyle(
-                            color: Colors.white60,
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: Colors.white60, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -74,13 +68,18 @@ class ChatsListScreen extends StatelessWidget {
                       leading: CircleAvatar(
                         backgroundColor: AppColors.accent,
                         child: Text(
-                          otherUserName.isNotEmpty ? otherUserName[0].toUpperCase() : '?',
+                          otherUserName.isNotEmpty
+                              ? otherUserName[0].toUpperCase()
+                              : '?',
                           style: const TextStyle(color: Colors.black),
                         ),
                       ),
                       title: Text(
                         otherUserName,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(
                         chat.lastMessage,
@@ -90,7 +89,10 @@ class ChatsListScreen extends StatelessWidget {
                       ),
                       trailing: Text(
                         _formatTime(chat.lastMessageTime),
-                        style: const TextStyle(color: Colors.white60, fontSize: 12),
+                        style: const TextStyle(
+                          color: Colors.white60,
+                          fontSize: 12,
+                        ),
                       ),
                       onTap: () {
                         Navigator.push(
