@@ -7,6 +7,7 @@ import '../../utils/constants.dart';
 import '../../models/swap_model.dart';
 import '../chats/chat_screen.dart';
 import '../../models/message_model.dart';
+import '../../models/chat_model.dart';
 
 class MyOffersScreen extends StatelessWidget {
   const MyOffersScreen({super.key});
@@ -211,12 +212,9 @@ class MyOffersScreen extends StatelessWidget {
                       );
                       final currentUserId = authProvider.user?.id ?? '';
 
-                      final otherUserId = isSent
-                          ? swap.receiverId
-                          : swap.senderId;
-                      final otherUserName = isSent
-                          ? swap.receiverName
-                          : swap.senderName;
+                      final otherUserId = isSent ? swap.receiverId : swap.senderId;
+                      final otherUserName =
+                          isSent ? swap.receiverName : swap.senderName;
 
                       try {
                         final chatId = await chatProvider.getOrCreateChat(
@@ -225,7 +223,7 @@ class MyOffersScreen extends StatelessWidget {
                           bookId: swap.bookId,
                         );
 
-                        // Get the chat model
+                        // Build a ChatModel instance using the same shape as lib/models/chat_model.dart
                         final chat = ChatModel(
                           id: chatId,
                           user1Id: currentUserId.compareTo(otherUserId) < 0
@@ -233,8 +231,8 @@ class MyOffersScreen extends StatelessWidget {
                               : otherUserId,
                           user1Name: currentUserId.compareTo(otherUserId) < 0
                               ? (authProvider.user?.displayName ??
-                                    authProvider.user?.email ??
-                                    'Unknown')
+                                  authProvider.user?.email ??
+                                  'Unknown')
                               : otherUserName,
                           user2Id: currentUserId.compareTo(otherUserId) < 0
                               ? otherUserId
@@ -242,8 +240,8 @@ class MyOffersScreen extends StatelessWidget {
                           user2Name: currentUserId.compareTo(otherUserId) < 0
                               ? otherUserName
                               : (authProvider.user?.displayName ??
-                                    authProvider.user?.email ??
-                                    'Unknown'),
+                                  authProvider.user?.email ??
+                                  'Unknown'),
                           lastMessage: '',
                           lastMessageTime: DateTime.now(),
                           bookId: swap.bookId,
@@ -348,11 +346,10 @@ class MyOffersScreen extends StatelessWidget {
                                   success
                                       ? 'Swap accepted!'
                                       : swapsProvider.errorMessage ??
-                                            'Failed to accept swap',
+                                          'Failed to accept swap',
                                 ),
-                                backgroundColor: success
-                                    ? Colors.green
-                                    : Colors.red,
+                                backgroundColor:
+                                    success ? Colors.green : Colors.red,
                               ),
                             );
                           }
@@ -380,11 +377,10 @@ class MyOffersScreen extends StatelessWidget {
                                   success
                                       ? 'Swap rejected'
                                       : swapsProvider.errorMessage ??
-                                            'Failed to reject swap',
+                                          'Failed to reject swap',
                                 ),
-                                backgroundColor: success
-                                    ? Colors.orange
-                                    : Colors.red,
+                                backgroundColor:
+                                    success ? Colors.orange : Colors.red,
                               ),
                             );
                           }
