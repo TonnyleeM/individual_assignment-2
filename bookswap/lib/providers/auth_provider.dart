@@ -22,7 +22,7 @@ class AuthProvider extends ChangeNotifier {
   // Initialize auth state listener
   void _initAuthListener() {
     _authService.authStateChanges.listen((User? firebaseUser) async {
-      if (firebaseUser != null && firebaseUser.emailVerified) {
+      if (firebaseUser != null) {
         // Get user data from Firestore
         _user = await _authService.getUserData(firebaseUser.uid);
         _errorMessage = null;

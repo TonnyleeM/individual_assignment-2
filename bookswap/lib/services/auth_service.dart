@@ -37,7 +37,7 @@ class AuthService {
         'email': email.trim(),
         'displayName': displayName,
         'createdAt': FieldValue.serverTimestamp(),
-        'emailVerified': false,
+        'emailVerified': true,  // Set to true for testing
       });
 
       return _userFromFirebase(userCredential.user);
