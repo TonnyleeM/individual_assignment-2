@@ -23,17 +23,14 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final isVerified = await authProvider.checkEmailVerified();
 
     if (isVerified && mounted) {
-      // Email is verified, user will be automatically signed in via auth state listener
+      // Email is verified, auth state listener will handle navigation
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Email verified! You can now sign in.'),
+          content: Text('Email verified! Signing you in...'),
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+      // Don't navigate manually - let AuthWrapper handle it
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
