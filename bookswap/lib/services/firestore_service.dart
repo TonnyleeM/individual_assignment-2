@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/book_model.dart';
 import '../models/swap_model.dart';
-import '../models/message_model.dart';
+import '../models/message_model.dart' show MessageModel;
 import '../models/chat_model.dart';
 
 class FirestoreService {
@@ -234,10 +234,10 @@ class FirestoreService {
 
     // Combine streams using StreamController
     final controller = StreamController<List<ChatModel>>();
-    final Map<String, ChatModel> allChats = {};
+    final Map<String, ChatModel> allChats = <String, ChatModel>{};
 
     void updateList() {
-      final list = allChats.values.toList();
+      final List<ChatModel> list = allChats.values.toList();
       list.sort((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
       if (!controller.isClosed) {
         controller.add(list);
