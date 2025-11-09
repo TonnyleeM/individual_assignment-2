@@ -59,17 +59,7 @@ class AuthService {
         password: password,
       );
 
-      // Reload user to get latest verification status
-      await userCredential.user!.reload();
-      final user = _auth.currentUser;
-      
-      // Check if email is verified
-      if (user != null && !user.emailVerified) {
-        await _auth.signOut();
-        throw 'Please verify your email before signing in. Check your inbox for the verification link.';
-      }
-
-      return _userFromFirebase(user);
+      return _userFromFirebase(userCredential.user);
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
