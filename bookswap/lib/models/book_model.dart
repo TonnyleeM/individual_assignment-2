@@ -18,7 +18,7 @@ class BookModel {
     required this.author,
     this.swapFor, // ← NEW FIELD ADDED
     required this.condition,
-    required this.coverImageUrl,
+    this.coverImageUrl,
     required this.ownerId,
     required this.ownerName,
     required this.status,
