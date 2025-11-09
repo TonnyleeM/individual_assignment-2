@@ -1,4 +1,7 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "site": "bookswap-d71af-96c42",
     "public": "build/web",
