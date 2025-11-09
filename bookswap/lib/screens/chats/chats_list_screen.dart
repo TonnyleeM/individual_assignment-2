@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/auth_provider.dart' as app_auth;
 import '../../utils/constants.dart';
-import '../../models/chat_model.dart';
+import '../../models/message_model.dart';
 import 'chat_screen.dart';
 import 'package:intl/intl.dart';
 

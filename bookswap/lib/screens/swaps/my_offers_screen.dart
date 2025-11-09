@@ -6,7 +6,6 @@ import '../../providers/chat_provider.dart';
 import '../../utils/constants.dart';
 import '../../models/swap_model.dart';
 import '../chats/chat_screen.dart';
-import '../../models/chat_model.dart';
 import '../../models/message_model.dart';
 
 class MyOffersScreen extends StatelessWidget {

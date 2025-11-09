@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/message_model.dart';
-import '../models/chat_model.dart';
 import '../services/firestore_service.dart';
 
 class ChatProvider extends ChangeNotifier {
