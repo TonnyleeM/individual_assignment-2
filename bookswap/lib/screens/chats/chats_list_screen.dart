@@ -13,7 +13,7 @@ class ChatsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<app_auth.AuthProvider>(context);
     final userId = authProvider.user?.id;
 
     return Scaffold(
