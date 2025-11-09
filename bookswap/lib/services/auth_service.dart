@@ -32,15 +32,18 @@ class AuthService {
       // Send email verification
       await userCredential.user?.sendEmailVerification();
 
-      // Create user document in Firestore
-      await _firestore.collection('users').doc(userCredential.user?.uid).set({
-        'email': email.trim(),
-        'displayName': displayName,
-        'createdAt': FieldValue.serverTimestamp(),
-        'emailVerified': true,  // Set to true for testing
-      });
+      // Create user document in Firestore with correct structure
+      final userDoc = AppUser(
+        id: userCredential.user!.uid,
+        name: displayName,
+        email: email.trim(),
+        verified: false, // Will be updated when email is verified
+        createdAt: DateTime.now(),
+      );
 
-      return _userFromFirebase(userCredential.user);
+      await _firestore.collection('users').doc(userCredential.user?.uid).set(userDoc.toFirestore());
+
+      return userDoc;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
@@ -109,17 +112,32 @@ class AuthService {
     try {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
-        final data = doc.data()!;
-        return AppUser(
-          id: uid,
-          email: data['email'] ?? '',
-          displayName: data['displayName'],
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        );
+        return AppUser.fromFirestore(doc);
       }
       return null;
     } catch (e) {
+      print('Error getting user data: $e');
       return null;
+    }
+  }
+
+  // Update user verification status
+  Future<void> updateUserVerification(String uid, bool verified) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'verified': verified,
+      });
+    } catch (e) {
+      print('Error updating user verification: $e');
+    }
+  }
+
+  // Create or update user profile
+  Future<void> createOrUpdateUserProfile(AppUser user) async {
+    try {
+      await _firestore.collection('users').doc(user.id).set(user.toFirestore(), SetOptions(merge: true));
+    } catch (e) {
+      throw 'Error creating/updating user profile: ${e.toString()}';
     }
   }
 
@@ -128,8 +146,9 @@ class AuthService {
     if (user == null) return null;
     return AppUser(
       id: user.uid,
+      name: user.displayName ?? '',
       email: user.email ?? '',
-      displayName: user.displayName,
+      verified: user.emailVerified,
       createdAt: user.metadata.creationTime ?? DateTime.now(),
     );
   }

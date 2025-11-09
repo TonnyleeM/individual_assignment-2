@@ -6,7 +6,7 @@ class BookModel {
   final String author;
   final String? swapFor; // ← NEW FIELD ADDED
   final String condition; // New, Like New, Good, Used
-  final String? coverImageUrl;
+  final String? imageUrl;
   final String ownerId;
   final String ownerName;
   final String status; // available, pending, swapped
@@ -18,7 +18,7 @@ class BookModel {
     required this.author,
     this.swapFor, // ← NEW FIELD ADDED
     required this.condition,
-    this.coverImageUrl,
+    this.imageUrl,
     required this.ownerId,
     required this.ownerName,
     required this.status,
@@ -34,7 +34,7 @@ class BookModel {
       author: data['author'] ?? '',
       swapFor: data['swapFor'], // ← NEW FIELD ADDED
       condition: data['condition'] ?? 'Used',
-      coverImageUrl: data['coverImageUrl'],
+      imageUrl: data['imageUrl'],
       ownerId: data['ownerId'] ?? '',
       ownerName: data['ownerName'] ?? '',
       status: data['status'] ?? 'available',
@@ -50,7 +50,7 @@ class BookModel {
       if (swapFor != null && swapFor!.isNotEmpty)
         'swapFor': swapFor, // ← NEW FIELD ADDED
       'condition': condition,
-      'coverImageUrl': coverImageUrl,
+      'imageUrl': imageUrl,
       'ownerId': ownerId,
       'ownerName': ownerName,
       'status': status,
@@ -69,7 +69,7 @@ class BookModel {
     String? author,
     String? swapFor, // ← NEW FIELD ADDED
     String? condition,
-    String? coverImageUrl,
+    String? imageUrl,
     String? ownerId,
     String? ownerName,
     String? status,
@@ -81,7 +81,7 @@ class BookModel {
       author: author ?? this.author,
       swapFor: swapFor ?? this.swapFor, // ← NEW FIELD ADDED
       condition: condition ?? this.condition,
-      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
       ownerId: ownerId ?? this.ownerId,
       ownerName: ownerName ?? this.ownerName,
       status: status ?? this.status,

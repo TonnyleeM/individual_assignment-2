@@ -5,10 +5,49 @@ import '../models/book_model.dart';
 import '../models/swap_model.dart';
 import '../models/message_model.dart' show MessageModel;
 import '../models/chat_model.dart';
+import '../models/user_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // User Profile Methods
+  // Get user profile by ID
+  Future<AppUser?> getUserProfile(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      if (doc.exists) {
+        return AppUser.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching user profile: $e');
+      return null;
+    }
+  }
+
+  // Create or update user profile
+  Future<void> createOrUpdateUserProfile(AppUser user) async {
+    try {
+      await _firestore.collection('users').doc(user.id).set(
+        user.toFirestore(),
+        SetOptions(merge: true),
+      );
+    } catch (e) {
+      throw 'Error creating/updating user profile: ${e.toString()}';
+    }
+  }
+
+  // Update user verification status
+  Future<void> updateUserVerification(String userId, bool verified) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'verified': verified,
+      });
+    } catch (e) {
+      throw 'Error updating user verification: ${e.toString()}';
+    }
+  }
 
   // Get all available books
   Stream<List<BookModel>> getBooks() {
