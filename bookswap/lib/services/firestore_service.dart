@@ -262,6 +262,7 @@ class FirestoreService {
     controller.onCancel = () {
       sub1?.cancel();
       sub2?.cancel();
+      controller.close();
     };
 
     return controller.stream;

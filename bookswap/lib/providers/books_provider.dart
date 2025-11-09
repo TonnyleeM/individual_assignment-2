@@ -67,6 +67,7 @@ class BooksProvider extends ChangeNotifier {
         id: '', // Will be set by Firestore
         title: title,
         author: author,
+        swapFor: swapFor,
         condition: condition,
         coverImageUrl: null,
         ownerId: user.uid,
@@ -107,6 +108,7 @@ class BooksProvider extends ChangeNotifier {
     required String bookId,
     required String title,
     required String author,
+    String? swapFor,
     required String condition,
     File? imageFile,
     String? existingImageUrl,
@@ -143,6 +145,7 @@ class BooksProvider extends ChangeNotifier {
       final updatedBook = existingBook.copyWith(
         title: title,
         author: author,
+        swapFor: swapFor,
         condition: condition,
         coverImageUrl: imageUrl,
       );
