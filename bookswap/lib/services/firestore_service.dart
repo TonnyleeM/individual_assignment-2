@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/book_model.dart';
 import '../models/swap_model.dart';
 import '../models/message_model.dart';
+import '../models/chat_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -199,11 +200,12 @@ class FirestoreService {
       final chatDoc = await chatRef.get();
       if (!chatDoc.exists) {
         // Create new chat
+        final firstIsSmaller = userId1.compareTo(userId2) < 0;
         await chatRef.set({
-          'user1Id': userId1 < userId2 ? userId1 : userId2,
-          'user1Name': userId1 < userId2 ? userName1 : userName2,
-          'user2Id': userId1 < userId2 ? userId2 : userId1,
-          'user2Name': userId1 < userId2 ? userName2 : userName1,
+          'user1Id': firstIsSmaller ? userId1 : userId2,
+          'user1Name': firstIsSmaller ? userName1 : userName2,
+          'user2Id': firstIsSmaller ? userId2 : userId1,
+          'user2Name': firstIsSmaller ? userName2 : userName1,
           'lastMessage': '',
           'lastMessageTime': FieldValue.serverTimestamp(),
           if (bookId != null) 'bookId': bookId,
