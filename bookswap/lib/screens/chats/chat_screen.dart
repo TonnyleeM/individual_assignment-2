@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../models/message_model.dart';
 import 'package:intl/intl.dart';
+import '../../models/chat_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatModel chat;
