@@ -144,6 +144,37 @@ class _PostBookScreenState extends State<PostBookScreen> {
               const SizedBox(height: 20),
               // Title field
               TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon: const Icon(Icons.book, color: AppColors.accent),
+                  filled: true,
+                  fillColor: Colors.white.withOpacity(0.1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: AppColors.accent,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                style: const TextStyle(color: Colors.white),
+                validator: (value) => notEmpty(value, fieldName: 'Title'),
+              ),
+              const SizedBox(height: 20),
+              // Author field
+              TextFormField(
                 controller: _authorController,
                 decoration: InputDecoration(
                   labelText: 'Author',
@@ -173,7 +204,7 @@ class _PostBookScreenState extends State<PostBookScreen> {
                 validator: (value) => notEmpty(value, fieldName: 'Author'),
               ),
               const SizedBox(height: 20),
-              // Author field
+              // Swap For field
               TextFormField(
                 controller: _swapForController,
                 decoration: InputDecoration(
