@@ -18,7 +18,7 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    runApp(const BookSwapApp());
+    runApp(const BookSwapApp()); // kept as const
   } catch (e, st) {
     // If Firebase options are missing, show an error app with the exception.
     runApp(ErrorApp(error: e.toString()));
@@ -60,6 +60,68 @@ class ErrorApp extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class BookSwapApp extends StatelessWidget {
+  // Make the constructor const so `runApp(const BookSwapApp())` compiles
+  const BookSwapApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => BooksProvider()),
+        ChangeNotifierProvider(create: (_) => SwapsProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ],
+      child: MaterialApp(
+        title: 'BookSwap',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+            secondary: AppColors.accent,
+          ),
+          useMaterial3: true,
+        ),
+        home: const AuthWrapper(),
+      ),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, _) {
+        // Show loading while checking auth state
+        if (authProvider.isLoading && authProvider.user == null) {
+          return const Scaffold(
+            backgroundColor: AppColors.primary,
+            body: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
+              ),
+            ),
+          );
+        }
+
+        // Show welcome screen if not authenticated
+        if (!authProvider.isAuthenticated) {
+          return const WelcomeScreen();
+        }
+
+        // Show home screen if authenticated
+        return const HomeScreen();
+      },
     );
   }
 }
